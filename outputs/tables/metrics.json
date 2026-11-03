@@ -1,0 +1,59 @@
+{
+  "rows": 1470,
+  "raw_columns": 35,
+  "exits": 237,
+  "rate": 0.16122448979591836,
+  "missing": 0,
+  "duplicates": 0,
+  "constant_fields": [
+    "EmployeeCount",
+    "Over18",
+    "StandardHours"
+  ],
+  "k": 2,
+  "silhouette": 0.3793783242710655,
+  "pca_variance": 0.5933634548533913,
+  "best_model": "逻辑回归",
+  "threshold": 0.09000000000000001,
+  "train_n": 1102,
+  "test_n": 368,
+  "train_exits": 178,
+  "test_exits": 59,
+  "confusion": [
+    [
+      209,
+      100
+    ],
+    [
+      13,
+      46
+    ]
+  ],
+  "features": [
+    "DistanceFromHome",
+    "MonthlyIncome",
+    "NumCompaniesWorked",
+    "PercentSalaryHike",
+    "TotalWorkingYears",
+    "TrainingTimesLastYear",
+    "YearsAtCompany",
+    "YearsInCurrentRole",
+    "YearsSinceLastPromotion",
+    "YearsWithCurrManager",
+    "BusinessTravel",
+    "Department",
+    "Education",
+    "EducationField",
+    "EnvironmentSatisfaction",
+    "JobInvolvement",
+    "JobLevel",
+    "JobRole",
+    "JobSatisfaction",
+    "OverTime",
+    "PerformanceRating",
+    "RelationshipSatisfaction",
+    "StockOptionLevel",
+    "WorkLifeBalance"
+  ],
+  "seed": 2026
+}

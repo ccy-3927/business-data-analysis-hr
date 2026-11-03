@@ -1,0 +1,11 @@
+{
+  "dataset": "IBM HR Analytics Employee Attrition & Performance",
+  "appendix_A": "UCI / Kaggle·IBM HR",
+  "page": "https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset",
+  "download": "https://www.kaggle.com/api/v1/datasets/download/pavansubhasht/ibm-hr-analytics-attrition-dataset",
+  "accessed": "2026-10-27",
+  "fictional": true,
+  "license_platform_label": "Database: Open Database, Contents: Database Contents",
+  "sha256_zip": "8368f123ae1ae9e30c2f19f28e766a28d7481d1486ff9aabc9e0533fefcf6be3",
+  "sha256_csv": "a5c31e38bd7fafc9bc333884eb181b06b41b8e5e488e8f7ccb27199fb3be7659"
+}
