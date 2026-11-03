@@ -62,4 +62,6 @@ AI使用：OpenAI Codex参与要求核对、代码、图表、论文初稿及排
 
 本仓库保留分析和展示所需文件，不包含本地验收记录、临时截图、缓存及回调测试材料。数据清洗记录与模型评估结果属于分析证据，予以保留。原始ZIP是分析脚本的输入，论文模板是论文生成脚本的依赖。
 
-已保存的PNG包含后续单独美化版本；`scripts/visuals.py`生成的是基础绘图版本，运行`run_all.py`或Notebook的绘图单元会覆盖当前PNG外观。若仅查看成果，可直接浏览PNG和HTML。论文保留本地现有版本，未在本次上传中重新排版或替换插图。
+最终图形样式已整合进 `scripts/figure_styles`。`python run_all.py`、`python scripts/visuals.py` 及Notebook绘图单元均调用同一绘图入口，从数据重新绘制24张图，不依赖已有PNG或本机工作目录。只重绘图形时运行 `python scripts/visuals.py`；完整分析运行 `python run_all.py`。图19不生成底部说明，百分比按实际类别（行）计算，扇形面积与样本数成正比。
+
+当前样式包括哑铃图、点图、华夫图、棒棒糖图、圆角画像热力图、雨云图及渐变诊断图。为兼容论文中的引用，保留原PNG文件名，图形形式以图片与`outputs/tables/figure_index.csv`为准。图10保留当前平面圆环形式，重新输出为高清PNG。中文字体优先使用Microsoft YaHei，其次SimHei；其他系统需安装这些字体或配置可用中文字体，不同字体与Matplotlib版本可能产生文字宽度和抗锯齿差异。论文保留已有版本，不会随图形重绘自动修改。

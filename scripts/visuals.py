@@ -29,7 +29,7 @@ def finish(f,n,name,ref,note):
     INDEX.append({'编号':f'fig{n:02d}','文件':filename,'类别':'教材模板' if n<=10 else '业务模型','对应模板或模型':ref,'解读':note})
 def leg(a):a.legend(facecolor=BG,labelcolor='white',fontsize=8)
 def lab(a,b,dark=True,fmt='%.0f'):a.bar_label(b,fmt=fmt,color='white' if dark else '#222',padding=3,fontsize=8)
-def run():
+def _base_run():
     INDEX.clear();d=pd.read_csv(CLEAN/'employees.csv');r=read('roles').sort_values('n',ascending=False);m=json.loads((TABLE/'metrics.json').read_text(encoding='utf-8'));x=np.arange(6);top=r.head(6);v=top.n.to_numpy();names=top['岗位'].tolist()
     cmap=LinearSegmentedColormap.from_list('book',[BLUE,CYAN])
     f,a=canvas('主要岗位的员工规模','员工数 / 人',True)
@@ -104,4 +104,43 @@ def run():
     f,a=canvas('月收入分布与离职标签','月收入 / 原始数值单位');a.boxplot([d.loc[d.Exited==0,'MonthlyIncome'],d.loc[d.Exited==1,'MonthlyIncome']],tick_labels=['留任标签','离职标签'],patch_artist=True,boxprops={'facecolor':'#82ADD7'});finish(f,23,'收入箱线分布','结构分析','币种未由来源明确，故不标美元；离群点保留。')
     fair=read('group_diagnostics');f,a=canvas('测试集性别分组的模型误差诊断','比例 / %');xx=np.arange(len(fair));a.bar(xx-.18,100*fair.recall,.36,color=BLUE,label='召回率');a.bar(xx+.18,100*fair.FPR,.36,color='#E69F00',label='假正率');a.set(xticks=xx,xticklabels=[f'{r.Gender}\nn={r.n}, 正类={r.positives}' for _,r in fair.iterrows()],ylim=(0,100));a.legend();finish(f,24,'群体误差诊断','离职预测','性别未输入模型；小样本差异不构成公平性保证。')
     pd.DataFrame(INDEX).to_csv(TABLE/'figure_index.csv',index=False,encoding='utf-8-sig')
+
+
+
+def run():
+    """重建全部24张最终样式图；不读取或复制已有PNG。"""
+    from figure_styles import structure, models, abc, profile, raincloud, diagnostics
+    from figure_styles.theme import dark_theme
+    FIG.mkdir(parents=True, exist_ok=True)
+    with plt.rc_context():
+        with dark_theme({14,17,18,20}):
+            _base_run()
+        with plt.rc_context():
+            plt.rcParams.update({"axes.labelsize": "medium"})
+            structure.run()
+        with dark_theme({11,12,13,15,19,23}):
+            plt.rcParams.update({"axes.labelsize": "medium"})
+            models.run()
+            abc.run()
+            profile.run()
+            raincloud.run()
+        plt.rcParams.update({"axes.labelsize": "medium"})
+        diagnostics.run()
+    index = pd.DataFrame(INDEX)
+    descriptions = {
+        2: ('哑铃图：岗位规模与六岗位均值', '圆点比较岗位人数与六岗位均值。'),
+        4: ('点图：岗位比例与Wilson区间', '点表示样本比例，横线表示95% Wilson区间。'),
+        5: ('华夫图：部门标签构成', '每格表示部门样本的1%，局部填充表示不足1%的部分。'),
+        12: ('ABC棒棒糖图', '对照岗位数占比与离职案例占比。'),
+        19: ('扇形混淆矩阵', '百分比按实际类别（行）计算，扇形面积与样本数成正比。'),
+        22: ('加班关联哑铃图', '圆点为样本比例，加粗短线为95% Wilson区间。'),
+        23: ('收入雨云图', '箱线与密度使用全样本；散点每组固定种子抽取最多100条。'),
+    }
+    for number, (kind, note) in descriptions.items():
+        mask = index['编号'].eq(f'fig{number:02d}')
+        index.loc[mask, '对应模板或模型'] = kind
+        index.loc[mask, '解读'] = note
+    index.to_csv(TABLE/'figure_index.csv', index=False, encoding='utf-8-sig')
+    print('24张最终样式PNG已从数据重新生成。')
+
 if __name__=='__main__':run()
