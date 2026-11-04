@@ -50,7 +50,7 @@ replacements={'__DATA__':d[fields].to_json(orient='records',force_ascii=False).r
 html=(ROOT/'scripts/dashboard_template.html').read_text(encoding='utf-8')
 for k,v in replacements.items():html=html.replace(k,v)
 assert '__DATA__' not in html and html.split('<script')[0].count('<svg ')==4
-out=ROOT/'outputs/dashboard/员工离职管理驾驶舱.html'
+out=ROOT/'outputs/dashboard/员工离职管理.html'
 out.parent.mkdir(parents=True,exist_ok=True)
 out.write_text(html,encoding='utf-8')
 print(out)

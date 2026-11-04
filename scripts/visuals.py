@@ -140,6 +140,7 @@ def run():
         mask = index['编号'].eq(f'fig{number:02d}')
         index.loc[mask, '对应模板或模型'] = kind
         index.loc[mask, '解读'] = note
+    index.loc[index['编号'].isin(['fig02','fig04','fig05']), '类别'] = '图型改进'
     index.to_csv(TABLE/'figure_index.csv', index=False, encoding='utf-8-sig')
     print('24张最终样式PNG已从数据重新生成。')
 

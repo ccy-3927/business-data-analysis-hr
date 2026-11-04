@@ -2,6 +2,6 @@
 from pathlib import Path
 import webbrowser,subprocess,sys
 root=Path(__file__).resolve().parent
-page=root/'outputs/dashboard/员工离职管理驾驶舱.html'
+page=root/'outputs/dashboard/员工离职管理.html'
 if not page.exists():subprocess.run([sys.executable,str(root/'scripts/dashboard.py')],check=True)
 webbrowser.open(page.as_uri())
