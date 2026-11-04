@@ -1,67 +1,96 @@
-# IBM员工离职分析与可视化
+# 商业数据分析｜员工结构与离职分析
 
-以模拟企业HR业务场景为主线，回答岗位案例集中度、员工结构和离职识别三个问题，并提出访谈、工作负荷核查及员工支持方案。
+以模拟企业 HR 管理场景为背景，围绕 **岗位离职案例集中度、员工结构差异和离职标签识别**，完成数据清洗、商业分析、模型评估与交互式可视化，并提出岗位访谈、工作负荷核查及员工支持建议。
 
-**数据明确对应课程附件A“UCI / Kaggle·IBM HR”条目。**选用 IBM HR Analytics Employee Attrition & Performance，共1470条、35字段。它由IBM数据科学家制作，是虚构样本，不是IBM真实员工记录。模拟场景不等于伪造数据来源；实施方案与计划不写成已经取得的成效。
+**1,470 条样本 · 35 个原始字段 · 3 个分析模块 · 24 张图表 · 1 个交互大屏**
 
-## 查看成果
+数据选自课程附件A对应的 **IBM HR Analytics Employee Attrition & Performance**。该数据集由 IBM 数据科学家制作，为虚构样本；本项目将其用于模拟企业分析，不代表 IBM 的真实员工情况。
 
-- `docs/商业数据分析期末论文.docx`：按原模板制作；封面个人信息留空。
-- `商业数据分析.ipynb`：可直接在现有Jupyter中逐步运行，发布版清空本地执行输出，可按顺序重新运行。
-- `outputs/figures`：24张PNG图表，包含教材图形迁移与业务分析图，部分图形已按展示需要调整。
-- `outputs/tables`：数据审计、ABC、聚类、预测及评估明细。
-- `docs/字段与分析口径.md`：字段解释与指标口径。
-- `docs/思路与答辩说明.md`：分析思路与答辩说明。
+## 主要成果
 
-## 运行
+- **[分析论文](docs/商业数据分析期末论文.docx)**：完整呈现研究背景、分析方法、结果解释与管理建议。
+- **[Jupyter Notebook](商业数据分析.ipynb)**：按步骤运行数据处理、模型分析与可视化。
+- **[可视化图表](outputs/figures)**：24 张 PNG 图表，涵盖结构比较、分群画像、模型评估与关联分析。
+- **[分析结果表](outputs/tables)**：保存 ABC 分类、聚类、预测及评估明细，便于查看与复核。
 
-在本目录打开终端，使用已有Anaconda内核。已检查的主要包为Python环境中的pandas 2.2.3、scikit-learn 1.6.1、Matplotlib 3.10.0、Bokeh 3.6.2；无需重新安装现有包。
+## 部分成果展示
 
-```powershell
-python run_all.py
-python 启动大屏.py
+采用统一暗色背景，通过不同图形展示构成、群体差异和模型表现。点击图片可查看大图。
+
+| 部门标签构成 · 华夫图 | 员工分群画像 · 圆角热力图 |
+| :---: | :---: |
+| [![各部门离职与留任标签构成](outputs/figures/fig05_层叠柱形图.png)](outputs/figures/fig05_层叠柱形图.png) | [![员工分群画像的标准化均值](outputs/figures/fig15_分群画像.png)](outputs/figures/fig15_分群画像.png) |
+| 每格表示部门内样本的 1%，局部填充保留精确比例。 | 对照两个群体在收入、工龄、职级等维度的特征。 |
+
+| 分类模型表现 · 扇形混淆矩阵 | 收入与离职标签 · 雨云图 |
+| :---: | :---: |
+| [![独立测试集混淆矩阵](outputs/figures/fig19_混淆矩阵.png)](outputs/figures/fig19_混淆矩阵.png) | [![月收入分布与离职标签](outputs/figures/fig23_收入箱线分布.png)](outputs/figures/fig23_收入箱线分布.png) |
+| 同时呈现识别、漏报和误报；比例按实际类别计算。 | 结合散点、箱线和密度，展示两组收入分布。 |
+
+### 交互式大屏
+
+**[员工结构与离职管理大屏](outputs/dashboard/员工离职管理.html)** 支持按部门、加班标签、员工群体与司龄筛选，指标、图表和岗位汇总明细同步更新。
+
+下载 HTML 后在浏览器中打开即可交互，无需联网或启动 Python 服务。GitHub 文件页面展示的是源码，需要下载后打开才能操作。
+
+## 分析方法与主要发现
+
+| 分析模块 | 方法 | 主要发现 |
+| --- | --- | --- |
+| 岗位案例集中度 | 按离职人数进行 ABC 分类 | 四个 A 类岗位覆盖 199 个离职案例，占全部离职案例的 **83.97%**。 |
+| 员工结构分群 | 7 个特征标准化，比较 K=2～6 的轮廓系数 | 最终选取两个群体，样本数分别为 **1,188** 和 **282**；离职标签占比分别为 **18.01%** 和 **8.16%**。 |
+| 离职标签识别 | 比较逻辑回归、随机森林与常数基线 | 选定逻辑回归，独立测试集 ROC-AUC 约 **0.826**、AP 约 **0.609**；识别 46 人、漏报 13 人、误报 100 人。 |
+
+分类模型采用分层 75%/25% 训练测试划分，在训练集内部进行五折交叉验证；阈值依据训练集折外 F2 选择，为 0.09。聚类不使用离职标签，也不将聚类标签作为预测输入。
+
+结果用于确定后续调查与员工支持的优先方向。数据没有明确观察期，离职标签占比不能解释为年度离职率；横截面关联不能证明因果关系。月收入币种未明确，图表使用原始数值单位。
+
+## 快速开始
+
+下载仓库后，在项目根目录打开终端。已有所需依赖可直接运行；新环境先安装依赖：
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
-大屏文件为 `outputs/dashboard/员工离职管理驾驶舱.html`，双击即可打开。新版使用原生SVG、CSS网格与JavaScript，数据和首屏图表内嵌，无需Bokeh浏览器运行库、联网或Python服务。桌面窗口采用紧凑双排布局，表格内部滚动；窄屏自动改为纵向排列。运行 `python scripts/dashboard.py` 可单独重建大屏，不影响论文和PNG配图。
+重新计算分析结果、绘制全部图表并生成大屏：
 
-如使用全新环境，才执行 `python -m pip install -r requirements.txt`。论文生成还需要python-docx；可在已有该包的环境执行 `python scripts/build_report.py`。论文需在Word中核验排版，不能以脚本运行成功代替视觉核验。
+```bash
+python run_all.py
+```
 
-## 三个商业分析模块
+只重绘图表：
 
-1. 岗位离职案例ABC：以离职人数计算贡献，跨越80%与95%的岗位归前一类别。四个A类岗位覆盖199/237，即83.97%的案例；不是按工资给员工评定价值。
-2. K-Means员工分群：7个特征标准化，K=2至6按轮廓系数选择。最终K=2；离职标签不参与聚类。群1为1188人、群2为282人，离职标签占比18.01%与8.16%。聚类为全样本描述，不接入分类模型。
-3. 离职分类预测：分层75%/25%隔离测试；训练集分层5折按AP选择逻辑回归，与随机森林、常数基线比较。阈值仅用训练折外F2选择，为0.09。测试ROC-AUC约0.826、AP约0.609；识别46、漏报13、误报100、正确排除209。不同模型阈值不同，主要用AP/AUC比较排序能力。
+```bash
+python scripts/visuals.py
+```
 
-预测输入排除目标、员工ID、常量、年龄、性别、婚姻状态及聚类标签；这不自动消除代理偏差。自助区间只覆盖固定模型测试样本的不确定性。数据缺少日期，故不编造月度趋势、同比、年度离职率及同期群留存；MonthlyIncome币种未明确，使用原始数值单位。
+也可以在 Jupyter 中打开 `商业数据分析.ipynb`，按顺序运行单元格。Notebook 与命令行共用最终绘图代码，能够从数据重新生成当前图形样式。中文字体优先使用 Microsoft YaHei，其次为 SimHei；更换字体或依赖版本可能影响文字布局与抗锯齿效果。
 
-## 数据获取与许可
+## 项目结构
 
-- 发布者：pavansubhash；数据集版本1。
-- 页面：https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset
-- 获取方式：2026-10-27从Kaggle官方下载API取得ZIP，无网页抓取。
-- 接口：https://www.kaggle.com/api/v1/datasets/download/pavansubhasht/ibm-hr-analytics-attrition-dataset
-- 平台授权标签：**Database: Open Database, Contents: Database Contents**。来源官方元数据保存在 `data/raw/platform_metadata.json` 和 `dataset_description.json`；文件哈希见 `manifest.json`。
-- 原始数据及衍生数据保留来源和相应数据库/内容许可要求，不声明为CC0；代码不改变数据原许可。见 `DATA_LICENSE.md`。
-- 教材图形来自用户提供的原文件，只保留样式映射与解析证据，不再分发教材工作簿。
+```text
+data/             原始数据、来源说明与清洗结果
+docs/             分析论文、字段口径与答辩说明
+outputs/
+  figures/        24 张静态图表
+  tables/         分析与模型评估结果
+  dashboard/      交互式 HTML 大屏
+scripts/
+  figure_styles/  最终图形样式
+  pipeline.py     数据处理与分析建模
+  visuals.py      统一绘图入口
+  dashboard.py    大屏生成
+商业数据分析.ipynb  分步分析 Notebook
+run_all.py        一键运行入口
+requirements.txt  Python 依赖
+```
 
-## 文件组织与复现边界
+## 数据来源与许可
 
-`data/raw` 原始文件、平台说明与哈希；`data/clean` CSV与SQLite；`scripts` 自编分析、图形、大屏与论文代码；`outputs` 结果；`docs` 论文与说明。
+- **来源**：[Kaggle · IBM HR Analytics Employee Attrition & Performance](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset)，发布者 pavansubhash，版本 1。
+- **获取方式**：2026 年 10 月 27 日通过 Kaggle 官方下载接口获取，未使用网页爬虫。
+- **来源记录**：[原始文件清单](data/raw/manifest.json)、[平台元数据](data/raw/platform_metadata.json)和[数据集说明](data/raw/dataset_description.json)。
+- **许可**：平台标注为 “Database: Open Database, Contents: Database Contents”，详见 [数据许可说明](DATA_LICENSE.md)。原始数据与衍生数据保留来源及适用许可。
 
-随机种子2026，固定模型参数。不同库版本可能出现微小数值差异，以项目记录版本和已保存结果为准。修改特征、参数或数据后应重新生成全部结果，并审核论文中的解释与管理方案。核心统计由结果表读取，少量固定案例说明仍需人工检查。
-
-## 提交状态与分工
-
-仓库：https://github.com/ccy-3927/business-data-analysis-hr
-
-最终提交前：填写姓名、学号、学院、专业班级；填写实际成员分工；本人复核代码与结论；确认论文中的仓库链接与提交信息。
-
-AI使用：OpenAI Codex参与要求核对、代码、图表、论文初稿及排版核验。论文有完整披露，作者应按课程规定审核并理解成果。成员分工：________________。
-
-## 发布文件说明
-
-本仓库保留分析和展示所需文件，不包含本地验收记录、临时截图、缓存及回调测试材料。数据清洗记录与模型评估结果属于分析证据，予以保留。原始ZIP是分析脚本的输入，论文模板是论文生成脚本的依赖。
-
-最终图形样式已整合进 `scripts/figure_styles`。`python run_all.py`、`python scripts/visuals.py` 及Notebook绘图单元均调用同一绘图入口，从数据重新绘制24张图，不依赖已有PNG或本机工作目录。只重绘图形时运行 `python scripts/visuals.py`；完整分析运行 `python run_all.py`。图19不生成底部说明，百分比按实际类别（行）计算，扇形面积与样本数成正比。
-
-当前样式包括哑铃图、点图、华夫图、棒棒糖图、圆角画像热力图、雨云图及渐变诊断图。为兼容论文中的引用，保留原PNG文件名，图形形式以图片与`outputs/tables/figure_index.csv`为准。图10保留当前平面圆环形式，重新输出为高清PNG。中文字体优先使用Microsoft YaHei，其次SimHei；其他系统需安装这些字体或配置可用中文字体，不同字体与Matplotlib版本可能产生文字宽度和抗锯齿差异。论文保留已有版本，不会随图形重绘自动修改。
+分析使用固定随机种子 2026。修改数据、特征或模型参数后，应重新运行分析并更新相应解释。AI 辅助使用情况见论文中的披露。
