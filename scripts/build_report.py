@@ -127,6 +127,8 @@ for sec in d.sections:
         for p in h.paragraphs:
             for r in p.runs:r.text=r.text.replace('大数据分析及数据可视化','商业数据分析')
 update=OxmlElement('w:updateFields');update.set(qn('w:val'),'true');d.settings.element.append(update)
+from report_layout import move_key_figures
+move_key_figures(d)
 out=ROOT/'docs/商业数据分析期末论文.docx';d.save(out)
 editable={'word/document.xml','word/_rels/document.xml.rels','[Content_Types].xml','word/settings.xml'}
 with zipfile.ZipFile(TEMPLATE) as src,zipfile.ZipFile(out) as final:
